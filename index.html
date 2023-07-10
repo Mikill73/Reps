@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Bairro AnimeFire - Relatório</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    
+    h1 {
+      opacity: 0.5;
+      align-self: center;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .animefire {
+      color: #21D3FF;
+      text-shadow: 0 0 5px #21D3FF, 0 0 10px #21D3FF, 0 0 15px #21D3FF;
+      animation: neon-glow 1s ease-in-out infinite alternate;
+    }
+    
+    @keyframes neon-glow {
+      from {
+        text-shadow: 0 0 5px #21D3FF, 0 0 10px #21D3FF, 0 0 15px #21D3FF;
+      }
+      to {
+        text-shadow: 0 0 10px #21D3FF, 0 0 20px #21D3FF, 0 0 30px #21D3FF;
+      }
+    }
+    
+    .form-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      background-color: rgba(33, 211, 255, 0.3);
+      padding: 20px;
+      border-radius: 10px;
+      width: 400px;
+    }
+    
+    .form-container.active {
+      display: flex;
+    }
+    
+    .form-container textarea {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+      resize: none;
+    }
+    
+    .form-container button {
+      padding: 10px 20px;
+      background-color: #21D3FF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: bold;
+      text-transform: uppercase;
+      transition: background-color 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .form-container button:hover {
+      background-color: #0FAAEF;
+    }
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: transparent;
+      color: #21D3FF;
+      border: 1px solid #21D3FF;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: background-color 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+  <h1>Bairro <span class="animefire">AnimeFire</span></h1>
+  
+  <button class="button" onclick="exibirFormulario()">Relatório</button>
+  
+  <div id="formContainer" class="form-container">
+    <textarea id="nomeDiscord" placeholder="Insira seu nome no Discord" rows="1" maxlength="50"></textarea>
+    <textarea id="nomeAlvo" placeholder="Informe o nome do usuário a ser relatado" rows="1" maxlength="50"></textarea>
+    <textarea id="relatorio" placeholder="Escreva o relatório" rows="5" maxlength="500"></textarea>
+    <button onclick="enviarRelatorio()">Enviar</button>
+  </div>
+  
+  <script>
+    function exibirFormulario() {
+      var formContainer = document.getElementById("formContainer");
+      formContainer.classList.toggle("active");
+      
+      var nomeArmazenado = localStorage.getItem("nome");
+      if (nomeArmazenado) {
+        document.getElementById("nomeDiscord").value = nomeArmazenado;
+      }
+    }
+    
+    function enviarRelatorio() {
+  var nomeDiscord = document.getElementById("nomeDiscord").value;
+  var nomeAlvo = document.getElementById("nomeAlvo").value;
+  var relatorio = document.getElementById("relatorio").value;
+
+  var mensagem = "# ------------------------\n" +
+                 "**### Relatório escrito por:** " + nomeDiscord + "\n\n" +
+                 "**### Alvo do relatório:** " + nomeAlvo + "\n\n" +
+                 "**### Relatório:** " + relatorio + "\n" +
+                 "# ------------------------";
+
+  var webhookURL = "https://discord.com/api/webhooks/1127761927066619905/G4qaA0dK_3pTeIeHgXwr3bTNbVCPyMQaiaGqsbUo5pDfPeUk1wd6NFD4HJNhGQk9eyQN";
+
+  var request = new XMLHttpRequest();
+  request.open("POST", webhookURL);
+  request.setRequestHeader('Content-type', 'application/json');
+  request.send(JSON.stringify({ "content": mensagem }));
+
+  alert("Enviado");
+
+  localStorage.setItem("nome", nomeDiscord);
+}
+  </script>
+</body>
+</html>
