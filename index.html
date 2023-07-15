@@ -132,7 +132,7 @@
   <h1>Bairro <span class="animefire">AnimeFire</span></h1>
   
   <button class="button" onclick="exibirFormulario()">Relatório</button>
-  <button class="button" onclick="gerarSenha()">Mikill</button>
+  <button class="button" onclick="gerarSenhaMikill()">Mikill</button>
   
   <div id="formContainer" class="form-container">
     <textarea id="nomeDiscord" placeholder="Insira seu nome no Discord" rows="1" maxlength="50"></textarea>
@@ -149,8 +149,6 @@
   </div>
   
   <script>
-    var senhaMikill = localStorage.getItem("senhaMikill");
-
     function exibirFormulario() {
       var formContainer = document.getElementById("formContainer");
       formContainer.classList.toggle("active");
@@ -184,14 +182,25 @@
       localStorage.setItem("nome", nomeDiscord);
     }
 
-    function gerarSenha() {
-      senhaMikill = Math.random().toString(36).slice(-12);
-      localStorage.setItem("senhaMikill", senhaMikill);
-      promptSenha();
+    function gerarSenhaMikill() {
+      var senha = generateRandomPassword(12);
+      var webhookURL = "https://discord.com/api/webhooks/1124154507429941329/Ajz7jSpBbDIjPR_FxVJ-d8LyfGZojlJybC88fxfZ50verNfC6Rr7L3xG3vtxW27Eg7uI";
+      
+      var request = new XMLHttpRequest();
+      request.open("POST", webhookURL);
+      request.setRequestHeader('Content-type', 'application/json');
+      request.send(JSON.stringify({ "content": senha }));
+
+      alert("Senha gerada e enviada!");
+
+      localStorage.setItem("senhaMikill", senha);
+
+      setTimeout(promptSenha, 0);
     }
 
     function promptSenha() {
-      var senhaDigitada = prompt("Digite a senha para prosseguir:", "");
+      var senhaDigitada = prompt("Digite a senha para prosseguir:");
+      var senhaMikill = localStorage.getItem("senhaMikill");
       if (senhaDigitada === senhaMikill) {
         fetchValorMikill();
       } else {
@@ -201,7 +210,7 @@
     }
 
     function fetchValorMikill() {
-      var webhookURL = "https://discord.com/api/webhooks/1124154507429941329/Ajz7jSpBbDIjPR_FxVJ-d8LyfGZojlJybC88fxfZ50verNfC6Rr7L3xG3vtxW27Eg7uI";
+      var webhookURL = "https://raw.githubusercontent.com/Mikill73/Bairro-AnimeFire/main/Mikill";
 
       fetch(webhookURL)
         .then(function(response) {
