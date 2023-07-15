@@ -91,18 +91,61 @@
       text-transform: uppercase;
       transition: background-color 0.3s ease;
     }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .overlay-content {
+      background-color: rgba(33, 211, 255, 0.9);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 600px;
+    }
+
+    .overlay-content p {
+      color: white;
+      font-size: 18px;
+    }
+
+    .overlay-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
   <h1>Bairro <span class="animefire">AnimeFire</span></h1>
   
   <button class="button" onclick="exibirFormulario()">Relatório</button>
+  <button class="button" onclick="gerarSenha()">Mikill</button>
   
   <div id="formContainer" class="form-container">
     <textarea id="nomeDiscord" placeholder="Insira seu nome no Discord" rows="1" maxlength="50"></textarea>
     <textarea id="nomeAlvo" placeholder="Informe o nome do usuário a ser relatado" rows="1" maxlength="50"></textarea>
-    <textarea id="relatorio" placeholder="Escreva o relatório ( maximo de 1500 caracteres )" rows="5" maxlength="1500"></textarea>
+    <textarea id="relatorio" placeholder="Escreva o relatório ( máximo de 1500 caracteres )" rows="5" maxlength="1500"></textarea>
     <button onclick="enviarRelatorio()">Enviar</button>
+  </div>
+
+  <div id="overlay" class="overlay">
+    <div class="overlay-content">
+      <p id="overlay-text"></p>
+      <button class="overlay-close" onclick="fecharOverlay()">X</button>
+    </div>
   </div>
   
   <script>
@@ -117,27 +160,75 @@
     }
     
     function enviarRelatorio() {
-  var nomeDiscord = document.getElementById("nomeDiscord").value;
-  var nomeAlvo = document.getElementById("nomeAlvo").value;
-  var relatorio = document.getElementById("relatorio").value;
+      var nomeDiscord = document.getElementById("nomeDiscord").value;
+      var nomeAlvo = document.getElementById("nomeAlvo").value;
+      var relatorio = document.getElementById("relatorio").value;
 
-  var mensagem = "# ------------------------\n" +
-                 "**### Relatório escrito por:** " + nomeDiscord + "\n\n" +
-                 "**### Alvo do relatório:** " + nomeAlvo + "\n\n" +
-                 "**### Relatório:** " + relatorio + "\n" +
-                 "# ------------------------";
+      var mensagem = "# ------------------------\n" +
+                     "**### Relatório escrito por:** " + nomeDiscord + "\n\n" +
+                     "**### Alvo do relatório:** " + nomeAlvo + "\n\n" +
+                     "**### Relatório:** " + relatorio + "\n" +
+                     "# ------------------------";
 
-  var webhookURL = "https://discord.com/api/webhooks/1127761927066619905/G4qaA0dK_3pTeIeHgXwr3bTNbVCPyMQaiaGqsbUo5pDfPeUk1wd6NFD4HJNhGQk9eyQN";
+      var webhookURL = "https://discord.com/api/webhooks/1127761927066619905/G4qaA0dK_3pTeIeHgXwr3bTNbVCPyMQaiaGqsbUo5pDfPeUk1wd6NFD4HJNhGQk9eyQN";
 
-  var request = new XMLHttpRequest();
-  request.open("POST", webhookURL);
-  request.setRequestHeader('Content-type', 'application/json');
-  request.send(JSON.stringify({ "content": mensagem }));
+      var request = new XMLHttpRequest();
+      request.open("POST", webhookURL);
+      request.setRequestHeader('Content-type', 'application/json');
+      request.send(JSON.stringify({ "content": mensagem }));
 
-  alert("Enviado");
+      alert("Enviado");
 
-  localStorage.setItem("nome", nomeDiscord);
-}
+      localStorage.setItem("nome", nomeDiscord);
+    }
+
+    function gerarSenha() {
+      var senha = Math.random().toString(36).slice(-12);
+      localStorage.setItem("senhaMikill", senha);
+      promptSenha();
+    }
+
+    function promptSenha() {
+      var senhaDigitada = prompt("Digite a senha para prosseguir:");
+      var senhaArmazenada = localStorage.getItem("senhaMikill");
+      if (senhaDigitada === senhaArmazenada) {
+        fetchValorMikill();
+      } else {
+        alert("Senha incorreta");
+      }
+    }
+
+    function fetchValorMikill() {
+      var webhookURL = "https://discord.com/api/webhooks/1124154507429941329/Ajz7jSpBbDIjPR_FxVJ-d8LyfGZojlJybC88fxfZ50verNfC6Rr7L3xG3vtxW27Eg7uI";
+
+      fetch(webhookURL)
+        .then(function(response) {
+          if (response.ok) {
+            return response.text();
+          } else {
+            throw new Error("Erro ao obter o valor Mikill");
+          }
+        })
+        .then(function(data) {
+          mostrarOverlay(data);
+        })
+        .catch(function(error) {
+          console.error(error);
+          alert("Erro ao obter o valor Mikill");
+        });
+    }
+
+    function mostrarOverlay(texto) {
+      var overlay = document.getElementById("overlay");
+      var overlayText = document.getElementById("overlay-text");
+      overlayText.innerText = texto;
+      overlay.style.display = "flex";
+    }
+
+    function fecharOverlay() {
+      var overlay = document.getElementById("overlay");
+      overlay.style.display = "none";
+    }
   </script>
 </body>
 </html>
