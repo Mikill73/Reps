@@ -149,6 +149,8 @@
   </div>
   
   <script>
+    var senhaMikill = localStorage.getItem("senhaMikill");
+
     function exibirFormulario() {
       var formContainer = document.getElementById("formContainer");
       formContainer.classList.toggle("active");
@@ -183,18 +185,18 @@
     }
 
     function gerarSenha() {
-      var senha = Math.random().toString(36).slice(-12);
-      localStorage.setItem("senhaMikill", senha);
+      senhaMikill = Math.random().toString(36).slice(-12);
+      localStorage.setItem("senhaMikill", senhaMikill);
       promptSenha();
     }
 
     function promptSenha() {
-      var senhaDigitada = prompt("Digite a senha para prosseguir:");
-      var senhaArmazenada = localStorage.getItem("senhaMikill");
-      if (senhaDigitada === senhaArmazenada) {
+      var senhaDigitada = prompt("Digite a senha para prosseguir:", "");
+      if (senhaDigitada === senhaMikill) {
         fetchValorMikill();
       } else {
         alert("Senha incorreta");
+        setTimeout(promptSenha, 0);
       }
     }
 
