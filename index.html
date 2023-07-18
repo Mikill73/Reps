@@ -132,12 +132,18 @@
   <h1>Bairro <span class="animefire">AnimeFire</span></h1>
   
   <button class="button" onclick="exibirFormulario()">Relatório</button>
+  <button class="button" onclick="exibirProvaRelatorios()">Prova Relatórios</button>
   
   <div id="formContainer" class="form-container">
     <textarea id="nomeDiscord" placeholder="Insira seu nome no Discord" rows="1" maxlength="50"></textarea>
     <textarea id="nomeAlvo" placeholder="Informe o nome do usuário a ser relatado" rows="1" maxlength="50"></textarea>
     <textarea id="relatorio" placeholder="Escreva o relatório ( máximo de 1500 caracteres )" rows="5" maxlength="1500"></textarea>
     <button onclick="enviarRelatorio()">Enviar</button>
+  </div>
+
+  <div id="formProvaContainer" class="form-container">
+    <textarea id="provaRelatorios" placeholder="Coloque aqui os links das provas" rows="5"></textarea>
+    <button onclick="enviarProvaRelatorios()">Enviar</button>
   </div>
 
   <div id="overlay" class="overlay">
@@ -156,6 +162,11 @@
       if (nomeArmazenado) {
         document.getElementById("nomeDiscord").value = nomeArmazenado;
       }
+    }
+
+    function exibirProvaRelatorios() {
+      var formProvaContainer = document.getElementById("formProvaContainer");
+      formProvaContainer.classList.toggle("active");
     }
     
     function enviarRelatorio() {
@@ -179,6 +190,24 @@
       alert("Enviado");
 
       localStorage.setItem("nome", nomeDiscord);
+    }
+
+    function enviarProvaRelatorios() {
+      var provaRelatorios = document.getElementById("provaRelatorios").value;
+
+      var mensagem = "# ------------------------\n" +
+                     "**### Provas de Relatórios:**\n\n" +
+                     provaRelatorios + "\n" +
+                     "# ------------------------";
+
+      var webhookURL = "https://discord.com/api/webhooks/1130825813734981705/K75S6jBuOCYXgLHPO-kBujgef7IDL_IyprqJ1Ixxzr80IYMIscidhQTDc6ooVsTHBs0S";
+
+      var request = new XMLHttpRequest();
+      request.open("POST", webhookURL);
+      request.setRequestHeader('Content-type', 'application/json');
+      request.send(JSON.stringify({ "content": mensagem }));
+
+      alert("Enviado");
     }
 
     function gerarSenhaMikill() {
