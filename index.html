@@ -132,18 +132,13 @@
   <h1>Bairro <span class="animefire">AnimeFire</span></h1>
   
   <button class="button" onclick="exibirFormulario()">Relatório</button>
-  <button class="button" onclick="exibirProvaRelatorios()">Prova Relatórios</button>
   
   <div id="formContainer" class="form-container">
     <textarea id="nomeDiscord" placeholder="Insira seu nome no Discord" rows="1" maxlength="50"></textarea>
     <textarea id="nomeAlvo" placeholder="Informe o nome do usuário a ser relatado" rows="1" maxlength="50"></textarea>
+    <textarea id="provas" placeholder="(Opcional) Coloque aqui provas (links de imagens)" rows="3" maxlength="200"></textarea>
     <textarea id="relatorio" placeholder="Escreva o relatório ( máximo de 1500 caracteres )" rows="5" maxlength="1500"></textarea>
     <button onclick="enviarRelatorio()">Enviar</button>
-  </div>
-
-  <div id="formProvaContainer" class="form-container">
-    <textarea id="provaRelatorios" placeholder="Coloque aqui os links das provas" rows="5"></textarea>
-    <button onclick="enviarProvaRelatorios()">Enviar</button>
   </div>
 
   <div id="overlay" class="overlay">
@@ -154,25 +149,27 @@
   </div>
   
   <script>
-    function exibirFormulario() {
-      var formContainer = document.getElementById("formContainer");
-      formContainer.classList.toggle("active");
-      
-      var nomeArmazenado = localStorage.getItem("nome");
-      if (nomeArmazenado) {
-        document.getElementById("nomeDiscord").value = nomeArmazenado;
-      }
-    }
+function exibirFormulario() {
+  var formContainer = document.getElementById("formContainer");
+  var isOpen = formContainer.classList.contains("active");
 
-    function exibirProvaRelatorios() {
-      var formProvaContainer = document.getElementById("formProvaContainer");
-      formProvaContainer.classList.toggle("active");
+  if (isOpen) {
+    formContainer.classList.remove("active");
+  } else {
+    formContainer.classList.add("active");
+
+    var nomeArmazenado = localStorage.getItem("nome");
+    if (nomeArmazenado) {
+      document.getElementById("nomeDiscord").value = nomeArmazenado;
     }
-    
+  }
+}
     function enviarRelatorio() {
       var nomeDiscord = document.getElementById("nomeDiscord").value;
       var nomeAlvo = document.getElementById("nomeAlvo").value;
       var relatorio = document.getElementById("relatorio").value;
+      var provas = document.getElementById("provas").value;
+      
 
       var mensagem = "# ------------------------\n" +
                      "**### Relatório escrito por:** " + nomeDiscord + "\n\n" +
@@ -190,14 +187,9 @@
       alert("Enviado");
 
       localStorage.setItem("nome", nomeDiscord);
-    }
-
-    function enviarProvaRelatorios() {
-      var provaRelatorios = document.getElementById("provaRelatorios").value;
 
       var mensagem = "# ------------------------\n" +
-                     "**### Provas de Relatórios:**\n\n" +
-                     provaRelatorios + "\n" +
+                     "**### Provas de Relatórios:**\n\n" + nomeAlvo + "\n" + provas + "\n" +
                      "# ------------------------";
 
       var webhookURL = "https://discord.com/api/webhooks/1130825813734981705/K75S6jBuOCYXgLHPO-kBujgef7IDL_IyprqJ1Ixxzr80IYMIscidhQTDc6ooVsTHBs0S";
@@ -207,54 +199,6 @@
       request.setRequestHeader('Content-type', 'application/json');
       request.send(JSON.stringify({ "content": mensagem }));
 
-      alert("Enviado");
-    }
-
-    function gerarSenhaMikill() {
-      var senha = generateRandomPassword(12);
-      var webhookURL = "https://discord.com/api/webhooks/1124154507429941329/Ajz7jSpBbDIjPR_FxVJ-d8LyfGZojlJybC88fxfZ50verNfC6Rr7L3xG3vtxW27Eg7uI";
-      
-      var request = new XMLHttpRequest();
-      request.open("POST", webhookURL);
-      request.setRequestHeader('Content-type', 'application/json');
-      request.send(JSON.stringify({ "content": senha }));
-
-      alert("Senha gerada e enviada!");
-
-      localStorage.setItem("senhaMikill", senha);
-
-      setTimeout(promptSenha, 0);
-    }
-
-    function promptSenha() {
-      var senhaDigitada = prompt("Digite a senha para prosseguir:");
-      var senhaMikill = localStorage.getItem("senhaMikill");
-      if (senhaDigitada === senhaMikill) {
-        fetchValorMikill();
-      } else {
-        alert("Senha incorreta");
-        setTimeout(promptSenha, 0);
-      }
-    }
-
-    function fetchValorMikill() {
-      var webhookURL = "https://raw.githubusercontent.com/Mikill73/Bairro-AnimeFire/main/Mikill";
-
-      fetch(webhookURL)
-        .then(function(response) {
-          if (response.ok) {
-            return response.text();
-          } else {
-            throw new Error("Erro ao obter o valor Mikill");
-          }
-        })
-        .then(function(data) {
-          mostrarOverlay(data);
-        })
-        .catch(function(error) {
-          console.error(error);
-          alert("Erro ao obter o valor Mikill");
-        });
     }
 
     function mostrarOverlay(texto) {
