@@ -170,7 +170,7 @@ function exibirFormulario() {
     }
   }
 }
-    function enviarRelatorio() {
+function enviarRelatorio() {
   function getValueById(id) {
     return document.getElementById(id).value;
   }
@@ -183,43 +183,35 @@ function exibirFormulario() {
   var cientepago = getValueById("cientepago");
   var experiencia = getValueById("experiencia");
   var cenario = getValueById("cenario");
-      
 
-      var mensagem = "# ------------------------\n" +
-                 "**### Nome:** " + nomeDiscord + "\n" +
-                 "**### Idade:** " + idade + "\n" +
-                 "**### Tag do Discord:** " + iddiscord + "\n" +
-                 "**### Conhece comandos básicos de moderação:** " + comandosbasicos + "\n" +
-                 "**### Tempo no servidor:** " + temponoserver + "\n" +
-                 "**### Tempo disponível por semana:** " + tempodisponivel + "\n" +
-                 "**### Ciente de não ser pago como moderador:** " + cientepago + "\n" +
-                 "**### Experiência anterior:** " + experiencia + "\n" +
-                 "**### Cenário de moderação:** " + cenario + "\n" +
-                 "# ------------------------";
+  var mensagem = "# ------------------------\n" +
+    "**### Nome:** " + nomeDiscord + "\n" +
+    "**### Idade:** " + idade + "\n" +
+    "**### Tag do Discord:** " + iddiscord + "\n" +
+    "**### Conhece comandos básicos de moderação:** " + comandosbasicos + "\n" +
+    "**### Tempo no servidor:** " + temponoserver + "\n" +
+    "**### Tempo disponível por semana:** " + tempodisponivel + "\n" +
+    "**### Ciente de não ser pago como moderador:** " + cientepago + "\n" +
+    "**### Experiência anterior:** " + experiencia + "\n" +
+    "**### Cenário de moderação:** " + cenario + "\n" +
+    "# ------------------------";
 
-      var webhookURL = "https://discord.com/api/webhooks/1199101186758955018/4zJVfOmDLqDx4RxjhBDwI7AmGz5H2dJhaP7JqYDXD__46DRCnUdSD6QhcForRMCiMABt";
-
-      var request = new XMLHttpRequest();
-      request.open("POST", webhookURL);
-      request.setRequestHeader('Content-type', 'application/json');
-      request.send(JSON.stringify({ "content": mensagem }));
-
-      alert("Enviado");
-
-      localStorage.setItem("nome", nomeDiscord);
-
-      var mensagem = "# ------------------------\n" +
-                     "**### Provas de Relatórios:**\n\n" + nomeAlvo + "\n" + provas + "\n" +
-                     "# ------------------------";
-
-      var webhookURL = "https://discord.com/api/webhooks/1130825813734981705/K75S6jBuOCYXgLHPO-kBujgef7IDL_IyprqJ1Ixxzr80IYMIscidhQTDc6ooVsTHBs0S";
-
-      var request = new XMLHttpRequest();
-      request.open("POST", webhookURL);
-      request.setRequestHeader('Content-type', 'application/json');
-      request.send(JSON.stringify({ "content": mensagem }));
-
-    }
+  if (document.cookie.indexOf("tempo") === -1) {
+    var d = new Date();
+    d.setTime(d.getTime() + (30 * 60 * 1000));
+    var expires = "expires=" + d.toUTCString();
+    document.cookie = "tempo=true;" + expires;
+    var webhookURL = "https://discord.com/api/webhooks/1199101186758955018/4zJVfOmDLqDx4RxjhBDwI7AmGz5H2dJhaP7JqYDXD__46DRCnUdSD6QhcForRMCiMABt";
+    var request = new XMLHttpRequest();
+    request.open("POST", webhookURL);
+    request.setRequestHeader('Content-type', 'application/json');
+    request.send(JSON.stringify({ "content": mensagem }));
+    alert("Enviado");
+    localStorage.setItem("nome", nomeDiscord);
+  } else {
+    alert("Você só pode enviar um relatório a cada 30 minutos.");
+  }
+}
 
     function mostrarOverlay(texto) {
       var overlay = document.getElementById("overlay");
