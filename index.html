@@ -16,7 +16,7 @@
     }
     
     h1 {
-      opacity: 0.5;
+      opacity: 9.5;
       align-self: center;
       margin-top: 20px;
       margin-bottom: 20px;
@@ -129,15 +129,21 @@
   </style>
 </head>
 <body>
-  <h1>Bairro <span class="animefire">AnimeFire</span></h1>
+  <h1><span class="animefire">AnimeFire</span></h1>
   
-  <button class="button" onclick="exibirFormulario()">Relatório</button>
+  <button class="button" onclick="exibirFormulario()">Formulário moderador</button>
   
   <div id="formContainer" class="form-container">
-    <textarea id="nomeDiscord" placeholder="Insira seu nome no Discord" rows="1" maxlength="50"></textarea>
-    <textarea id="nomeAlvo" placeholder="Informe o nome do usuário a ser relatado" rows="1" maxlength="50"></textarea>
-    <textarea id="provas" placeholder="(Opcional) Coloque aqui provas (links de imagens)" rows="3" maxlength="200"></textarea>
-    <textarea id="relatorio" placeholder="Escreva o relatório ( máximo de 1500 caracteres )" rows="5" maxlength="1500"></textarea>
+      <h5>Você precisa de nível 15 para virar um moderador</h5>
+    <textarea id="nome" placeholder="Nome" rows="1" maxlength="100"></textarea>
+    <textarea id="idade" placeholder="Idade" rows="1" maxlength="3"></textarea>
+    <textarea id="iddiscord" placeholder="Tag do discord" rows="1" maxlength="100"></textarea>
+    <textarea id="comandosbasicos" placeholder="Conhece os comandos básico de moderação?" rows="1" maxlength="50"></textarea>
+    <textarea id="temponoserver" placeholder="Você está a quanto tempo nesse servidor?" rows="1" maxlength="500"></textarea>
+    <textarea id="tempodisponivel" placeholder="Qual é o seu tempo disponivel por semana?" rows="1" maxlength="500"></textarea>
+    <textarea id="cientepago" placeholder="Você está ciente que não será pago como moderador?" rows="1" maxLength="500"></textarea>
+    <textarea id="experiencia" placeholder="Você já teve experiência como moderador ou na administração de alguma comunidade? Se sim, aonde?" rows="2" maxlength="500"></textarea>
+    <textarea id="cenario" placeholder="Um membro ofendeu outro membro pois um terceiro membro disse uma mentira para ele, nesse caso, qual atitude você tomaria? (Descreva em detalhes até mesmo o comando que você usaria.)" rows="4" maxlength="5000"></textarea>
     <button onclick="enviarRelatorio()">Enviar</button>
   </div>
 
@@ -165,19 +171,33 @@ function exibirFormulario() {
   }
 }
     function enviarRelatorio() {
-      var nomeDiscord = document.getElementById("nomeDiscord").value;
-      var nomeAlvo = document.getElementById("nomeAlvo").value;
-      var relatorio = document.getElementById("relatorio").value;
-      var provas = document.getElementById("provas").value;
+  function getValueById(id) {
+    return document.getElementById(id).value;
+  }
+  var nomeDiscord = getValueById("nome");
+  var idade = getValueById("idade");
+  var iddiscord = getValueById("iddiscord");
+  var comandosbasicos = getValueById("comandosbasicos");
+  var temponoserver = getValueById("temponoserver");
+  var tempodisponivel = getValueById("tempodisponivel");
+  var cientepago = getValueById("cientepago");
+  var experiencia = getValueById("experiencia");
+  var cenario = getValueById("cenario");
       
 
       var mensagem = "# ------------------------\n" +
-                     "**### Relatório escrito por:** " + nomeDiscord + "\n\n" +
-                     "**### Alvo do relatório:** " + nomeAlvo + "\n\n" +
-                     "**### Relatório:** " + relatorio + "\n" +
-                     "# ------------------------";
+                 "**### Nome:** " + nomeDiscord + "\n" +
+                 "**### Idade:** " + idade + "\n" +
+                 "**### Tag do Discord:** " + iddiscord + "\n" +
+                 "**### Conhece comandos básicos de moderação:** " + comandosbasicos + "\n" +
+                 "**### Tempo no servidor:** " + temponoserver + "\n" +
+                 "**### Tempo disponível por semana:** " + tempodisponivel + "\n" +
+                 "**### Ciente de não ser pago como moderador:** " + cientepago + "\n" +
+                 "**### Experiência anterior:** " + experiencia + "\n" +
+                 "**### Cenário de moderação:** " + cenario + "\n" +
+                 "# ------------------------";
 
-      var webhookURL = "https://discord.com/api/webhooks/1127761927066619905/G4qaA0dK_3pTeIeHgXwr3bTNbVCPyMQaiaGqsbUo5pDfPeUk1wd6NFD4HJNhGQk9eyQN";
+      var webhookURL = "https://discord.com/api/webhooks/1199101186758955018/4zJVfOmDLqDx4RxjhBDwI7AmGz5H2dJhaP7JqYDXD__46DRCnUdSD6QhcForRMCiMABt";
 
       var request = new XMLHttpRequest();
       request.open("POST", webhookURL);
