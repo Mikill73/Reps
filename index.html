@@ -1,229 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>AnimeFire</title>
-  <style>
-    body {
-      background-color: black;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    
-    h1 {
-      opacity: 9.5;
-      align-self: center;
-      margin-top: 20px;
-      margin-bottom: 20px;
-    }
-    
-    .animefire {
-      color: #21D3FF;
-      text-shadow: 0 0 5px #21D3FF, 0 0 10px #21D3FF, 0 0 15px #21D3FF;
-      animation: neon-glow 1s ease-in-out infinite alternate;
-    }
-    
-    @keyframes neon-glow {
-      from {
-        text-shadow: 0 0 5px #21D3FF, 0 0 10px #21D3FF, 0 0 15px #21D3FF;
-      }
-      to {
-        text-shadow: 0 0 10px #21D3FF, 0 0 20px #21D3FF, 0 0 30px #21D3FF;
-      }
-    }
-    
-    .form-container {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      background-color: rgba(33, 211, 255, 0.3);
-      padding: 20px;
-      border-radius: 10px;
-      width: 400px;
-    }
-    
-    .form-container.active {
-      display: flex;
-    }
-    
-    .form-container textarea {
-      width: 100%;
-      margin-bottom: 10px;
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      background-color: rgba(255, 255, 255, 0.1);
-      color: white;
-      resize: none;
-    }
-    
-    .form-container button {
-      padding: 10px 20px;
-      background-color: #21D3FF;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      font-weight: bold;
-      text-transform: uppercase;
-      transition: background-color 0.3s ease;
-      cursor: pointer;
-    }
-    
-    .form-container button:hover {
-      background-color: #0FAAEF;
-    }
-    .button {
-      display: inline-block;
-      padding: 10px 20px;
-      background-color: transparent;
-      color: #21D3FF;
-      border: 1px solid #21D3FF;
-      border-radius: 5px;
-      font-size: 16px;
-      font-weight: bold;
-      text-decoration: none;
-      text-transform: uppercase;
-      transition: background-color 0.3s ease;
-    }
-
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.8);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-    }
-
-    .overlay-content {
-      background-color: rgba(33, 211, 255, 0.9);
-      padding: 20px;
-      border-radius: 10px;
-      text-align: center;
-      max-width: 600px;
-    }
-
-    .overlay-content p {
-      color: white;
-      font-size: 18px;
-    }
-
-    .overlay-close {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      color: white;
-      font-size: 24px;
-      cursor: pointer;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Protegida por Senha</title>
+    <style>
+        #content {
+            display: none;
+            text-align: center;
+        }
+        textarea {
+            width: 300px;
+            height: 150px;
+        }
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .container > div {
+            margin: 0 20px;
+        }
+        .arrow {
+            font-size: 24px;
+            color: red;
+        }
+        button {
+            margin: 0 10px;
+        }
+    </style>
 </head>
 <body>
-  <h1><span class="animefire">AnimeFire</span></h1>
-  
-  <button class="button" onclick="exibirFormulario()">Formulário moderador</button>
-  
-  <div id="formContainer" class="form-container">
-      <h5>Você precisa de nível 15 para virar um moderador</h5>
-    <textarea id="nome" placeholder="Nome" rows="1" maxlength="100"></textarea>
-    <textarea id="idade" placeholder="Idade" rows="1" maxlength="3"></textarea>
-    <textarea id="iddiscord" placeholder="Tag do discord" rows="1" maxlength="100"></textarea>
-    <textarea id="comandosbasicos" placeholder="Conhece os comandos básico de moderação?" rows="1" maxlength="50"></textarea>
-    <textarea id="temponoserver" placeholder="Você está a quanto tempo nesse servidor?" rows="1" maxlength="500"></textarea>
-    <textarea id="tempodisponivel" placeholder="Qual é o seu tempo disponivel por semana?" rows="1" maxlength="500"></textarea>
-    <textarea id="cientepago" placeholder="Você está ciente que não será pago como moderador?" rows="1" maxLength="500"></textarea>
-    <textarea id="experiencia" placeholder="Você já teve experiência como moderador ou na administração de alguma comunidade? Se sim, aonde?" rows="2" maxlength="500"></textarea>
-    <textarea id="cenario" placeholder="Um membro ofendeu outro membro pois um terceiro membro disse uma mentira para ele, nesse caso, qual atitude você tomaria? (Descreva em detalhes até mesmo o comando que você usaria.)" rows="4" maxlength="5000"></textarea>
-    <button onclick="enviarRelatorio()">Enviar</button>
-  </div>
+    <script>
+        const validPasswords = ["deb", "mikill"];
 
-  <div id="overlay" class="overlay">
-    <div class="overlay-content">
-      <p id="overlay-text"></p>
-      <button class="overlay-close" onclick="fecharOverlay()">X</button>
+        function askForPassword() {
+            let password = prompt("Digite a senha:");
+            if (validPasswords.includes(password)) {
+                document.getElementById("content").style.display = "block";
+            } else {
+                alert("Senha incorreta.");
+                askForPassword();
+            }
+        }
+
+        function removeZeroWidgets() {
+            const inputText = document.getElementById("input").value;
+            const outputText = inputText.replace(/zero\s*widgets/gi, "");
+            document.getElementById("output").value = outputText;
+        }
+
+        function copyToClipboard() {
+            const outputText = document.getElementById("output");
+            outputText.select();
+            document.execCommand("copy");
+        }
+
+        window.onload = askForPassword;
+    </script>
+
+    <div id="content">
+        <div class="container">
+            <div>
+                <label for="input">Input</label>
+                <br>
+                <textarea id="input" placeholder="Texto da loritta"></textarea>
+            </div>
+            <div class="arrow">
+                ➜
+            </div>
+            <div>
+                <label for="output">Output</label>
+                <br>
+                <textarea id="output" placeholder="Cola esse texto pra ganhar"></textarea>
+            </div>
+        </div>
+        <div class="container">
+            <button onclick="removeZeroWidgets()">Converter</button>
+            <button onclick="copyToClipboard()">Copiar</button>
+        </div>
     </div>
-  </div>
-  
-  <script>
-function exibirFormulario() {
-  var formContainer = document.getElementById("formContainer");
-  var isOpen = formContainer.classList.contains("active");
-
-  if (isOpen) {
-    formContainer.classList.remove("active");
-  } else {
-    formContainer.classList.add("active");
-
-    var nomeArmazenado = localStorage.getItem("nome");
-    if (nomeArmazenado) {
-      document.getElementById("nomeDiscord").value = nomeArmazenado;
-    }
-  }
-}
-function enviarRelatorio() {
-  function getValueById(id) {
-    return document.getElementById(id).value;
-  }
-  var nomeDiscord = getValueById("nome");
-  var idade = getValueById("idade");
-  var iddiscord = getValueById("iddiscord");
-  var comandosbasicos = getValueById("comandosbasicos");
-  var temponoserver = getValueById("temponoserver");
-  var tempodisponivel = getValueById("tempodisponivel");
-  var cientepago = getValueById("cientepago");
-  var experiencia = getValueById("experiencia");
-  var cenario = getValueById("cenario");
-
-  var mensagem = "# ------------------------\n" +
-    "**### Nome:** " + nomeDiscord + "\n" +
-    "**### Idade:** " + idade + "\n" +
-    "**### Tag do Discord:** " + iddiscord + "\n" +
-    "**### Conhece comandos básicos de moderação:** " + comandosbasicos + "\n" +
-    "**### Tempo no servidor:** " + temponoserver + "\n" +
-    "**### Tempo disponível por semana:** " + tempodisponivel + "\n" +
-    "**### Ciente de não ser pago como moderador:** " + cientepago + "\n" +
-    "**### Experiência anterior:** " + experiencia + "\n" +
-    "**### Cenário de moderação:** " + cenario + "\n" +
-    "# ------------------------";
-
-  if (document.cookie.indexOf("tempo") === -1) {
-    var d = new Date();
-    d.setTime(d.getTime() + (30 * 60 * 1000));
-    var expires = "expires=" + d.toUTCString();
-    document.cookie = "tempo=true;" + expires;
-    var webhookURL = "https://discord.com/api/webhooks/1199101186758955018/4zJVfOmDLqDx4RxjhBDwI7AmGz5H2dJhaP7JqYDXD__46DRCnUdSD6QhcForRMCiMABt";
-    var request = new XMLHttpRequest();
-    request.open("POST", webhookURL);
-    request.setRequestHeader('Content-type', 'application/json');
-    request.send(JSON.stringify({ "content": mensagem }));
-    alert("Enviado");
-    localStorage.setItem("nome", nomeDiscord);
-  } else {
-    alert("Você só pode enviar um relatório a cada 30 minutos.");
-  }
-}
-
-    function mostrarOverlay(texto) {
-      var overlay = document.getElementById("overlay");
-      var overlayText = document.getElementById("overlay-text");
-      overlayText.innerText = texto;
-      overlay.style.display = "flex";
-    }
-
-    function fecharOverlay() {
-      var overlay = document.getElementById("overlay");
-      overlay.style.display = "none";
-    }
-  </script>
 </body>
 </html>
