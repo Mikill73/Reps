@@ -47,13 +47,16 @@
         function removeZeroWidgets() {
             const inputText = document.getElementById("input").value;
             const outputText = inputText.replace(/[\u200B\u200C\u200D\u2060\uFEFF]/g, "");
-            document.getElementById("output").value = outputText;
+            copyToClipboard(outputText);
         }
 
-        function copyToClipboard() {
-            const outputText = document.getElementById("output");
-            outputText.select();
+        function copyToClipboard(text) {
+            const tempTextarea = document.createElement("textarea");
+            tempTextarea.value = text;
+            document.body.appendChild(tempTextarea);
+            tempTextarea.select();
             document.execCommand("copy");
+            document.body.removeChild(tempTextarea);
         }
 
         window.onload = askForPassword;
@@ -66,18 +69,9 @@
                 <br>
                 <textarea id="input" placeholder="Texto da loritta"></textarea>
             </div>
-            <div class="arrow">
-                ➜
-            </div>
-            <div>
-                <label for="output">Output</label>
-                <br>
-                <textarea id="output" placeholder="Cola esse texto pra ganhar"></textarea>
-            </div>
         </div>
         <div class="container">
-            <button onclick="removeZeroWidgets()">Converter</button>
-            <button onclick="copyToClipboard()">Copiar</button>
+            <button onclick="removeZeroWidgets()">Converter e Copiar</button>
         </div>
     </div>
 </body>
