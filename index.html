@@ -46,7 +46,7 @@
 
         function removeZeroWidgets() {
             const inputText = document.getElementById("input").value;
-            const outputText = inputText.replace(/zero\s*widgets/gi, "");
+            const outputText = inputText.replace(/[\u200B\u200C\u200D\u2060\uFEFF]/g, "");
             document.getElementById("output").value = outputText;
         }
 
