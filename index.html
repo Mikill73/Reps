@@ -7,74 +7,64 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            min-height: 100vh;
-            background-color: #f4f4f4;
-        }
-
-        #container {
-            width: 80%;
-            max-width: 800px;
             padding: 20px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 0;
         }
-
-        .aula {
-            margin: 10px 0;
+        .container {
+            width: 80%;
+            max-width: 600px;
         }
-
-        textarea {
-            width: calc(100% - 150px);
-            margin-left: 10px;
+        .textarea {
+            width: 100%;
+            margin-top: 5px;
+            padding: 5px;
+            box-sizing: border-box;
         }
-
-        button {
+        .button {
             margin-top: 20px;
             padding: 10px;
-            font-size: 16px;
+            border: none;
+            background-color: #007bff;
+            color: white;
             cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div id="container"></div>
-    <button onclick="copiar()">Copiar</button>
+    <div class="container" id="scheduleContainer"></div>
+    <button class="button" onclick="copySchedule()">Copiar</button>
 
     <script>
-        const aulas = {
-            segunda: ['Matemática', 'Inglês', 'Geografia', 'Português', 'Artes', 'Química'],
-            terça: ['Educação Física', 'Eletiva', 'Eletiva', 'Biologia', 'Matemática', 'Português'],
-            quarta: ['E.O Português', 'Inglês', 'Geografia', 'Matemática', 'Física', 'Biologia'],
-            quinta: ['Filosofia', 'Matemática', 'E.O Matemática', 'História', 'Português', 'E.O Português'],
-            sexta: ['E.O Matemática', 'Física', 'Sociologia', 'Português', 'Química', 'História'],
-            sábado: ['E.O Matemática', 'Física', 'Sociologia', 'Português', 'Química', 'História']
+        const schedules = {
+            "segunda": ["Matemática", "Inglês", "Geografia", "Português", "Artes", "Química"],
+            "terça": ["Educação Física", "Eletiva", "Eletiva", "Biologia", "Matemática", "Português"],
+            "quarta": ["E.O Português", "Inglês", "Geografia", "Matemática", "Física", "Biologia"],
+            "quinta": ["Filosofia", "Matemática", "E.O Matemática", "História", "Português", "E.O Português"],
+            "sexta": ["E.O Matemática", "Física", "Sociologia", "Português", "Química", "História"],
+            "sábado": ["teste", "teste", "teste", "teste", "teste", "teste"]
         };
 
-        function formatDate() {
-            const today = new Date();
-            const day = today.toLocaleDateString('pt-BR', { weekday: 'long' }).toLowerCase();
-            const date = today.toLocaleDateString('pt-BR');
-            return { day, date };
+        function getCurrentDay() {
+            const days = ["segunda", "terça", "quarta", "quinta", "sexta", "sábado"];
+            const today = new Date().getDay();
+            return days[today];
         }
 
-        function carregarAulas() {
-            const { day, date } = formatDate();
-            const container = document.getElementById('container');
-            const aulasDoDia = aulas[day] || [];
-
-            container.innerHTML = `<h2>${capitalizeFirstLetter(day)} - ${date}</h2>`;
-
-            aulasDoDia.forEach(aula => {
-                const div = document.createElement('div');
-                div.classList.add('aula');
-                div.innerHTML = `${aula}<textarea></textarea>`;
-                container.appendChild(div);
+        function generateSchedule() {
+            const day = getCurrentDay();
+            const date = new Date();
+            const dayOfMonth = date.getDate();
+            const month = date.getMonth() + 1;
+            const schedule = schedules[day];
+            
+            const container = document.getElementById("scheduleContainer");
+            container.innerHTML = `<h1>${capitalizeFirstLetter(day)} - ${dayOfMonth}/${month}</h1>`;
+            
+            schedule.forEach(subject => {
+                container.innerHTML += `<div><strong>*${subject}*</strong><br><textarea class="textarea"></textarea></div><br>`;
             });
         }
 
@@ -82,15 +72,28 @@
             return string.charAt(0).toUpperCase() + string.slice(1);
         }
 
-        function copiar() {
-            const container = document.getElementById('container');
-            const textToCopy = container.innerText;
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                alert('Conteúdo copiado para a área de transferência!');
+        function copySchedule() {
+            const container = document.getElementById("scheduleContainer");
+            const textareas = container.querySelectorAll('textarea');
+            let textToCopy = `${container.querySelector('h1').innerText}\n\n`;
+
+            container.querySelectorAll('div').forEach((div, index) => {
+                const subject = div.querySelector('strong').innerText.replace(/^\*\*/, '').replace(/\*\*$/, '');
+                const textareaValue = div.querySelector('textarea').value.trim();
+                textToCopy += `- *${subject}*:\n-${textareaValue}\n\n`;
             });
+
+            const textArea = document.createElement("textarea");
+            textArea.value = textToCopy.trim();
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textArea);
+
+            alert("Copiado, veja se não está faltando nada, se não estiver então mande no grupo");
         }
 
-        carregarAulas();
+        window.onload = generateSchedule;
     </script>
 </body>
 </html>
