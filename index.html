@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,54 +7,44 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
             margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
             background-color: #f4f4f4;
         }
 
-        .container {
+        #container {
             width: 80%;
             max-width: 800px;
-            background: #fff;
             padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
         }
 
         .aula {
             margin: 10px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
-        .textarea {
-            width: 200px;
-            height: 30px;
+        textarea {
+            width: calc(100% - 150px);
             margin-left: 10px;
         }
 
         button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
+            margin-top: 20px;
+            padding: 10px;
             font-size: 16px;
             cursor: pointer;
         }
     </style>
 </head>
-
 <body>
-    <div class="container" id="aulasContainer">
-        <!-- Conteúdo gerado pelo JavaScript -->
-    </div>
-    <button onclick="copiarParaAreaDeTransferencia()">Copiar</button>
+    <div id="container"></div>
+    <button onclick="copiar()">Copiar</button>
 
     <script>
         const aulas = {
@@ -63,32 +52,29 @@
             terça: ['Educação Física', 'Eletiva', 'Eletiva', 'Biologia', 'Matemática', 'Português'],
             quarta: ['E.O Português', 'Inglês', 'Geografia', 'Matemática', 'Física', 'Biologia'],
             quinta: ['Filosofia', 'Matemática', 'E.O Matemática', 'História', 'Português', 'E.O Português'],
-            sexta: ['E.O Matemática', 'Física', 'Sociologia', 'Português', 'Química', 'História']
+            sexta: ['E.O Matemática', 'Física', 'Sociologia', 'Português', 'Química', 'História'],
             sábado: ['E.O Matemática', 'Física', 'Sociologia', 'Português', 'Química', 'História']
         };
 
-        function getDiaAtual() {
-            const diasDaSemana = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'];
-            const hoje = new Date();
-            return diasDaSemana[hoje.getDay()];
+        function formatDate() {
+            const today = new Date();
+            const day = today.toLocaleDateString('pt-BR', { weekday: 'long' }).toLowerCase();
+            const date = today.toLocaleDateString('pt-BR');
+            return { day, date };
         }
 
-        function gerarAulas() {
-            const diaAtual = getDiaAtual();
-            const aulasDoDia = aulas[diaAtual] || [];
-            const container = document.getElementById('aulasContainer');
+        function carregarAulas() {
+            const { day, date } = formatDate();
+            const container = document.getElementById('container');
+            const aulasDoDia = aulas[day] || [];
 
-            const dataAtual = new Date().toLocaleDateString('pt-BR');
-            container.innerHTML = `<h1>${capitalizeFirstLetter(diaAtual)} - ${dataAtual}</h1>`;
+            container.innerHTML = `<h2>${capitalizeFirstLetter(day)} - ${date}</h2>`;
 
             aulasDoDia.forEach(aula => {
-                const aulaDiv = document.createElement('div');
-                aulaDiv.classList.add('aula');
-                aulaDiv.innerHTML = `
-                    ${aula}
-                    <textarea class="textarea" placeholder="Notas..."></textarea>
-                `;
-                container.appendChild(aulaDiv);
+                const div = document.createElement('div');
+                div.classList.add('aula');
+                div.innerHTML = `${aula}<textarea></textarea>`;
+                container.appendChild(div);
             });
         }
 
@@ -96,19 +82,15 @@
             return string.charAt(0).toUpperCase() + string.slice(1);
         }
 
-        function copiarParaAreaDeTransferencia() {
-            const container = document.getElementById('aulasContainer');
-            const range = document.createRange();
-            range.selectNode(container);
-            window.getSelection().removeAllRanges();
-            window.getSelection().addRange(range);
-            document.execCommand('copy');
-            window.getSelection().removeAllRanges();
-            alert('Conteúdo copiado para a área de transferência!');
+        function copiar() {
+            const container = document.getElementById('container');
+            const textToCopy = container.innerText;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert('Conteúdo copiado para a área de transferência!');
+            });
         }
 
-        gerarAulas();
+        carregarAulas();
     </script>
 </body>
-
 </html>
